@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import {
   LayoutDashboard,
   Receipt,
@@ -32,31 +32,31 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="hidden md:flex w-[260px] shrink-0 flex-col bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] border-r border-[hsl(var(--sidebar-border))]">
-      <div className="px-6 pt-6 pb-5 border-b border-[hsl(var(--sidebar-border))]">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))] grid place-items-center font-display font-bold text-lg">
-            A
+    <aside className="hidden md:flex md:w-[228px] xl:w-[252px] shrink-0 flex-col bg-[hsl(var(--sidebar-background))] text-[hsl(var(--sidebar-foreground))] border-r border-[hsl(var(--sidebar-border))]">
+      <div className="px-4 xl:px-5 pt-5 pb-4 border-b border-[hsl(var(--sidebar-border))] shrink-0">
+        <Link to="/dashboard" className="flex items-center gap-2.5 group">
+          <div className="h-9 w-9 shrink-0 rounded-xl bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))] grid place-items-center font-display font-bold text-base">
+            B
           </div>
-          <div className="leading-tight">
-            <div className="font-display text-base font-semibold text-white">
-              Akka Boutique
+          <div className="leading-tight min-w-0 whitespace-nowrap">
+            <div className="font-display text-[15px] font-semibold text-white">
+              BoutiqueOS
             </div>
-            <div className="text-[11px] uppercase tracking-[0.18em] text-[hsl(var(--sidebar-foreground))]/60">
-              Manager
+            <div className="text-[10px] uppercase tracking-[0.2em] text-[hsl(var(--sidebar-foreground))]/60">
+              Operations
             </div>
           </div>
-        </div>
+        </Link>
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-3 py-5 space-y-1 scrollbar-thin">
+      <nav className="flex-1 overflow-y-auto px-2.5 py-4 space-y-0.5 scrollbar-thin">
         {items.map((it) => (
           <NavLink
             key={it.to}
             to={it.to}
             className={({ isActive }) =>
               cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] transition-colors whitespace-nowrap",
                 isActive
                   ? "bg-[hsl(var(--sidebar-accent))] text-white"
                   : "text-[hsl(var(--sidebar-foreground))]/80 hover:bg-[hsl(var(--sidebar-accent))]/60 hover:text-white"
@@ -67,26 +67,26 @@ export default function Sidebar() {
               <>
                 <it.icon
                   className={cn(
-                    "h-[18px] w-[18px]",
+                    "h-[18px] w-[18px] shrink-0",
                     isActive
                       ? "text-[hsl(var(--accent))]"
                       : "text-[hsl(var(--sidebar-foreground))]/60"
                   )}
                 />
-                <span className="font-medium">{it.label}</span>
+                <span className="font-medium truncate">{it.label}</span>
               </>
             )}
           </NavLink>
         ))}
       </nav>
 
-      <div className="px-3 pb-5 pt-4 border-t border-[hsl(var(--sidebar-border))]">
-        <div className="flex items-center gap-3 rounded-lg px-3 py-2.5">
-          <div className="h-9 w-9 rounded-full bg-[hsl(var(--sidebar-accent))] text-white grid place-items-center text-sm font-semibold">
+      <div className="px-2.5 pb-4 pt-3 border-t border-[hsl(var(--sidebar-border))] shrink-0">
+        <div className="flex items-center gap-2.5 rounded-lg px-2.5 py-2">
+          <div className="h-9 w-9 shrink-0 rounded-full bg-[hsl(var(--sidebar-accent))] text-white grid place-items-center text-sm font-semibold">
             {user?.name?.[0] ?? "U"}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-sm font-medium text-white truncate">
+            <div className="text-[13px] font-medium text-white truncate">
               {user?.name}
             </div>
             <div className="text-[11px] text-[hsl(var(--sidebar-foreground))]/60 truncate">
@@ -95,7 +95,7 @@ export default function Sidebar() {
           </div>
           <button
             onClick={handleLogout}
-            className="grid place-items-center h-8 w-8 rounded-md text-[hsl(var(--sidebar-foreground))]/60 hover:text-white hover:bg-[hsl(var(--sidebar-accent))] transition-colors"
+            className="shrink-0 grid place-items-center h-8 w-8 rounded-md text-[hsl(var(--sidebar-foreground))]/60 hover:text-white hover:bg-[hsl(var(--sidebar-accent))] transition-colors"
             aria-label="Sign out"
           >
             <LogOut className="h-4 w-4" />

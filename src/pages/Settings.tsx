@@ -20,9 +20,8 @@ const sections = [
 ] as const;
 
 export default function Settings() {
-  const [active, setActive] = useState<(typeof sections)[number]["id"]>(
-    "boutique"
-  );
+  const [active, setActive] =
+    useState<(typeof sections)[number]["id"]>("boutique");
   const [saved, setSaved] = useState(false);
 
   function save() {
@@ -31,14 +30,14 @@ export default function Settings() {
   }
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8 pb-10">
+    <div className="px-4 sm:px-6 lg:px-7 pb-6">
       <TopBar
         title="Settings"
         subtitle="Configure boutique details, billing rules and team access."
         actions={
           <button
             onClick={save}
-            className="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[hsl(var(--primary))] text-white text-sm font-semibold"
+            className="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[hsl(var(--primary))] text-white text-sm font-semibold whitespace-nowrap"
           >
             {saved ? (
               <>
@@ -54,20 +53,20 @@ export default function Settings() {
         }
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 mt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-4 mt-4">
         <nav className="rounded-2xl border border-[hsl(var(--border))] bg-white p-2 h-fit">
           {sections.map((s) => (
             <button
               key={s.id}
               onClick={() => setActive(s.id)}
               className={cn(
-                "w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition",
+                "w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition whitespace-nowrap",
                 active === s.id
                   ? "bg-[hsl(var(--secondary))] font-semibold"
                   : "text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
               )}
             >
-              <s.icon className="h-4 w-4" /> {s.label}
+              <s.icon className="h-4 w-4 shrink-0" /> {s.label}
             </button>
           ))}
         </nav>
@@ -117,7 +116,7 @@ function BoutiquePanel() {
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         <Field label="Boutique Name">
-          <input defaultValue="Akka Boutique" className={inputCls} />
+          <input defaultValue="BoutiqueOS Demo Store" className={inputCls} />
         </Field>
         <Field label="GSTIN">
           <input defaultValue="33AABCU9603R1ZM" className={inputCls} />
@@ -126,10 +125,7 @@ function BoutiquePanel() {
           <input defaultValue="+91 98414 00000" className={inputCls} />
         </Field>
         <Field label="Email">
-          <input
-            defaultValue="hello@boutiqueakka.com"
-            className={inputCls}
-          />
+          <input defaultValue="hello@boutiqueos.com" className={inputCls} />
         </Field>
         <Field label="Address" full>
           <input
@@ -154,7 +150,7 @@ function BillingPanel() {
           <input defaultValue="5" className={inputCls} />
         </Field>
         <Field label="Invoice Prefix">
-          <input defaultValue="AKB-" className={inputCls} />
+          <input defaultValue="BOS-" className={inputCls} />
         </Field>
         <Field label="Default Payment Mode">
           <select className={inputCls} defaultValue="UPI">
@@ -211,11 +207,15 @@ function TeamPanel() {
   const team = [
     {
       name: "Lakshmi (Owner)",
-      email: "admin@boutiqueakka.com",
+      email: "admin@boutiqueos.com",
       role: "Administrator",
     },
-    { name: "Priya R.", email: "staff@boutiqueakka.com", role: "Sales Staff" },
-    { name: "Anitha M.", email: "anitha@boutiqueakka.com", role: "Sales Staff" },
+    { name: "Priya R.", email: "priya@boutiqueos.com", role: "Sales Staff" },
+    {
+      name: "Anitha M.",
+      email: "anitha@boutiqueos.com",
+      role: "Sales Staff",
+    },
   ];
   return (
     <div>
@@ -231,11 +231,11 @@ function TeamPanel() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="font-semibold">{m.name}</div>
-              <div className="text-xs text-[hsl(var(--muted-foreground))]">
+              <div className="text-xs text-[hsl(var(--muted-foreground))] truncate">
                 {m.email}
               </div>
             </div>
-            <span className="text-xs font-semibold bg-[hsl(var(--secondary))] px-2 py-1 rounded-full">
+            <span className="text-xs font-semibold bg-[hsl(var(--secondary))] px-2 py-1 rounded-full whitespace-nowrap">
               {m.role}
             </span>
           </li>

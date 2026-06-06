@@ -128,7 +128,6 @@ function pickPhoto(cat: string, idx: number) {
 }
 
 function makeBarcode(seed: number) {
-  // EAN-13 styled, 13 digits, deterministic
   const s = (seed * 9301 + 49297) % 233280;
   const base = (1000000000000 + Math.floor(s * 100000) + seed * 31).toString();
   return base.slice(0, 13).padEnd(13, "0");
@@ -190,6 +189,8 @@ const customers: { name: string; phone: string }[] = [
   { name: "Kavya Lakshmi", phone: "+91 70922 81143" },
   { name: "Indira Murugan", phone: "+91 98452 22118" },
   { name: "Padmavathi N", phone: "+91 98410 64512" },
+  { name: "Saranya Devi", phone: "+91 98401 11220" },
+  { name: "Vaishnavi Krishnan", phone: "+91 90034 56712" },
 ];
 
 const paymentModes: Invoice["paymentMode"][] = ["Cash", "UPI", "Card"];
@@ -197,7 +198,7 @@ const staff = ["Priya R.", "Lakshmi (Owner)", "Anitha M."];
 
 function buildInvoices(): Invoice[] {
   const list: Invoice[] = [];
-  for (let i = 0; i < 28; i++) {
+  for (let i = 0; i < 64; i++) {
     const c = customers[i % customers.length];
     const itemCount = rand(1, 4);
     const items = [];
@@ -221,14 +222,24 @@ function buildInvoices(): Invoice[] {
     }
     const discount = Math.random() < 0.4 ? rand(50, 500) : 0;
     const total = Math.round(subtotal + gstAmount - discount);
-    const daysAgo = i < 6 ? rand(0, 1) : rand(0, 28);
+    // Spread invoices over the last ~95 days (skewed towards recent)
+    const daysAgo =
+      i < 4
+        ? 0
+        : i < 10
+        ? rand(0, 1)
+        : i < 24
+        ? rand(2, 14)
+        : i < 42
+        ? rand(15, 35)
+        : rand(36, 95);
     list.push({
       id: `INV${1000 + i}`,
-      number: `AKB-${2025}-${String(1000 + i).slice(1)}`,
+      number: `BOS-2026-${String(1000 + i).slice(1)}`,
       customerName: c.name,
       customerPhone: c.phone,
       date: new Date(
-        Date.now() - daysAgo * 24 * 60 * 60 * 1000 - rand(0, 8) * 60 * 60 * 1000
+        Date.now() - daysAgo * 24 * 60 * 60 * 1000 - rand(0, 12) * 60 * 60 * 1000
       ).toISOString(),
       items,
       subtotal,

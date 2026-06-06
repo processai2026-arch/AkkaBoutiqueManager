@@ -63,14 +63,14 @@ export default function Dashboard() {
   }).reduce((s, i) => s + i.total, 0);
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8">
+    <div className="px-4 sm:px-6 lg:px-7 pb-6">
       <TopBar
         title="Good morning, Lakshmi"
-        subtitle="Here is what's happening at your boutique today."
+        subtitle="Here's what's happening at BoutiqueOS today."
         actions={
           <Link
             to="/billing"
-            className="hidden sm:inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[hsl(var(--primary))] text-white text-sm font-semibold hover:opacity-95"
+            className="hidden sm:inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[hsl(var(--primary))] text-white text-sm font-semibold hover:opacity-95 whitespace-nowrap"
           >
             <Receipt className="h-4 w-4" />
             New Bill
@@ -78,7 +78,7 @@ export default function Dashboard() {
         }
       />
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-6 animate-fade-in-up">
+      <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 mt-4 animate-fade-in-up">
         <StatCard
           label="Today's Sales"
           value={inr(todaySales)}
@@ -112,9 +112,9 @@ export default function Dashboard() {
         />
       </section>
 
-      <section className="grid grid-cols-1 xl:grid-cols-3 gap-4 mt-6">
-        <div className="xl:col-span-2 rounded-2xl border border-[hsl(var(--border))] bg-white p-5">
-          <div className="flex items-center justify-between mb-2">
+      <section className="grid grid-cols-1 xl:grid-cols-3 gap-3 mt-3">
+        <div className="xl:col-span-2 rounded-2xl border border-[hsl(var(--border))] bg-white p-4">
+          <div className="flex items-center justify-between mb-1">
             <div>
               <h2 className="font-display text-lg font-semibold">
                 Sales Trend
@@ -130,7 +130,7 @@ export default function Dashboard() {
               </span>
             </div>
           </div>
-          <div className="h-[280px]">
+          <div className="h-[260px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={SALES_TREND}
@@ -179,22 +179,20 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5">
-          <h2 className="font-display text-lg font-semibold">
-            Inventory Mix
-          </h2>
+        <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-4">
+          <h2 className="font-display text-lg font-semibold">Inventory Mix</h2>
           <p className="text-xs text-[hsl(var(--muted-foreground))]">
             By category (units in stock)
           </p>
-          <div className="h-[280px]">
+          <div className="h-[260px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={CATEGORY_BREAKDOWN}
                   dataKey="value"
                   nameKey="name"
-                  innerRadius={48}
-                  outerRadius={88}
+                  innerRadius={44}
+                  outerRadius={82}
                   paddingAngle={2}
                   stroke="white"
                   strokeWidth={2}
@@ -214,9 +212,9 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <section className="grid grid-cols-1 xl:grid-cols-3 gap-4 mt-6 mb-10">
+      <section className="grid grid-cols-1 xl:grid-cols-3 gap-3 mt-3">
         <div className="xl:col-span-2 rounded-2xl border border-[hsl(var(--border))] bg-white">
-          <div className="flex items-center justify-between p-5 border-b border-[hsl(var(--border))]">
+          <div className="flex items-center justify-between p-4 border-b border-[hsl(var(--border))]">
             <div>
               <h2 className="font-display text-lg font-semibold">
                 Recent Bills
@@ -236,10 +234,10 @@ export default function Dashboard() {
             {INVOICES.slice(0, 6).map((inv) => (
               <div
                 key={inv.id}
-                className="flex items-center justify-between px-5 py-3.5 hover:bg-[hsl(var(--secondary))]/30"
+                className="flex items-center justify-between px-4 py-3 hover:bg-[hsl(var(--secondary))]/30"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="h-9 w-9 rounded-lg bg-[hsl(var(--secondary))] grid place-items-center text-xs font-bold">
+                  <div className="h-9 w-9 rounded-lg bg-[hsl(var(--secondary))] grid place-items-center text-xs font-bold shrink-0">
                     {inv.customerName
                       .split(" ")
                       .map((s) => s[0])
@@ -256,8 +254,10 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="font-semibold">{inr(inv.total)}</div>
+                <div className="text-right shrink-0">
+                  <div className="font-semibold tabular-nums">
+                    {inr(inv.total)}
+                  </div>
                   <div className="text-[11px] text-[hsl(var(--muted-foreground))]">
                     {new Date(inv.date).toLocaleString("en-IN", {
                       hour: "2-digit",
@@ -272,14 +272,14 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5">
+        <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-4">
           <h2 className="font-display text-lg font-semibold">
             Recent Activity
           </h2>
           <p className="text-xs text-[hsl(var(--muted-foreground))]">
             Today across the boutique
           </p>
-          <ul className="mt-4 space-y-3">
+          <ul className="mt-3 space-y-2.5">
             {RECENT_ACTIVITY.map((a) => {
               const Icon =
                 a.type === "bill"
@@ -292,8 +292,8 @@ export default function Dashboard() {
                   <div className="h-9 w-9 rounded-lg bg-[hsl(var(--secondary))] grid place-items-center shrink-0">
                     <Icon className="h-4 w-4" />
                   </div>
-                  <div className="min-w-0">
-                    <div className="text-sm font-medium leading-snug">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-medium leading-snug truncate">
                       {a.title}
                     </div>
                     <div className="text-xs text-[hsl(var(--muted-foreground))] truncate">

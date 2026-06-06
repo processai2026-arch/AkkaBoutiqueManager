@@ -1,17 +1,11 @@
 import type { AuthUser } from "@/types";
 
-const KEY = "akka.auth";
+const KEY = "boutiqueos.auth";
 
 const ADMIN: AuthUser = {
-  email: "admin@boutiqueakka.com",
+  email: "admin@boutiqueos.com",
   name: "Lakshmi (Owner)",
   role: "admin",
-};
-
-const STAFF: AuthUser = {
-  email: "staff@boutiqueakka.com",
-  name: "Priya (Staff)",
-  role: "staff",
 };
 
 export function login(email: string, password: string): AuthUser | null {
@@ -20,10 +14,6 @@ export function login(email: string, password: string): AuthUser | null {
   if (e === ADMIN.email) {
     localStorage.setItem(KEY, JSON.stringify(ADMIN));
     return ADMIN;
-  }
-  if (e === STAFF.email) {
-    localStorage.setItem(KEY, JSON.stringify(STAFF));
-    return STAFF;
   }
   return null;
 }

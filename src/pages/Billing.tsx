@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, forwardRef } from "react";
 import {
   Plus,
   Minus,
@@ -93,9 +93,11 @@ export default function Billing() {
     0
   );
   const total = Math.max(0, subtotal + gstAmount - discount);
+  const itemCount = cart.reduce((s, c) => s + c.quantity, 0);
 
   const invoiceNo = useMemo(
-    () => `AKB-${new Date().getFullYear()}-${Math.floor(Math.random() * 900 + 100)}`,
+    () =>
+      `BOS-${new Date().getFullYear()}-${Math.floor(Math.random() * 900 + 100)}`,
     []
   );
 
@@ -109,63 +111,63 @@ export default function Billing() {
   }
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8 pb-10">
+    <div className="px-4 sm:px-6 lg:px-7 pb-6">
       <TopBar
         title="Billing"
         subtitle="Generate a customer invoice in under 30 seconds."
         actions={
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-2 px-3 h-10 rounded-lg bg-white border border-[hsl(var(--border))]">
             <span className="text-xs text-[hsl(var(--muted-foreground))]">
               Cashier
             </span>
-            <span className="text-sm font-semibold">{user?.name}</span>
+            <span className="text-sm font-semibold whitespace-nowrap">
+              {user?.name}
+            </span>
           </div>
         }
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-6 mt-6">
-        {/* Left: Catalog */}
-        <section className="space-y-4">
-          <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-4">
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex items-center gap-2 px-3 h-12 rounded-xl bg-[hsl(var(--secondary))]/60 border border-transparent w-full lg:max-w-md">
-                <Search className="h-5 w-5 text-[hsl(var(--muted-foreground))]" />
-                <input
-                  autoFocus
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search by name, SKU, barcode…"
-                  className="flex-1 bg-transparent text-base outline-none placeholder:text-[hsl(var(--muted-foreground))]"
-                />
-                {query && (
-                  <button
-                    onClick={() => setQuery("")}
-                    className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-              <div className="flex items-center gap-2 overflow-x-auto scrollbar-thin">
-                {["All", ...CATEGORIES].map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setActiveCat(c)}
-                    className={cn(
-                      "px-3.5 py-2 rounded-full text-sm whitespace-nowrap border transition",
-                      activeCat === c
-                        ? "bg-[hsl(var(--primary))] text-white border-[hsl(var(--primary))]"
-                        : "bg-white border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
-                    )}
-                  >
-                    {c}
-                  </button>
-                ))}
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+        {/* LEFT: Catalog (50%) */}
+        <section className="space-y-3 min-w-0">
+          <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-3.5">
+            <div className="flex items-center gap-2 px-3 h-11 rounded-lg bg-[hsl(var(--secondary))]/60">
+              <Search className="h-4 w-4 text-[hsl(var(--muted-foreground))] shrink-0" />
+              <input
+                autoFocus
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search by name, SKU or barcode…"
+                className="flex-1 bg-transparent text-[15px] outline-none placeholder:text-[hsl(var(--muted-foreground))] min-w-0"
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] shrink-0"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+            <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-thin mt-3 -mx-1 px-1 pb-0.5">
+              {["All", ...CATEGORIES].map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setActiveCat(c)}
+                  className={cn(
+                    "px-3 h-8 rounded-full text-xs whitespace-nowrap border transition shrink-0",
+                    activeCat === c
+                      ? "bg-[hsl(var(--primary))] text-white border-[hsl(var(--primary))]"
+                      : "bg-white border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
+                  )}
+                >
+                  {c}
+                </button>
+              ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 xl:grid-cols-3 gap-3">
             {filtered.map((p) => (
               <button
                 key={p.id}
@@ -181,17 +183,17 @@ export default function Billing() {
                   />
                 </div>
                 <div className="p-3">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[hsl(var(--muted-foreground))]">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[hsl(var(--muted-foreground))] truncate">
                     {p.category}
                   </div>
                   <div className="text-sm font-semibold mt-0.5 line-clamp-1">
                     {p.name}
                   </div>
                   <div className="flex items-center justify-between mt-2">
-                    <div className="font-display font-semibold">
+                    <div className="font-display font-semibold tabular-nums">
                       {inr(p.sellingPrice)}
                     </div>
-                    <div className="h-7 w-7 rounded-full bg-[hsl(var(--primary))] text-white grid place-items-center group-hover:bg-[hsl(var(--accent))] transition">
+                    <div className="h-7 w-7 rounded-full bg-[hsl(var(--primary))] text-white grid place-items-center group-hover:bg-[hsl(var(--accent))] transition shrink-0">
                       <Plus className="h-3.5 w-3.5" />
                     </div>
                   </div>
@@ -206,29 +208,34 @@ export default function Billing() {
           </div>
         </section>
 
-        {/* Right: Cart */}
-        <aside className="rounded-2xl border border-[hsl(var(--border))] bg-white flex flex-col h-fit lg:sticky lg:top-[88px]">
-          <div className="p-5 border-b border-[hsl(var(--border))] flex items-center justify-between">
-            <div>
-              <div className="text-xs uppercase tracking-[0.16em] text-[hsl(var(--muted-foreground))] font-semibold">
+        {/* RIGHT: Cart (50%) - sticky POS panel */}
+        <aside className="lg:sticky lg:top-[78px] lg:self-start lg:max-h-[calc(100vh-100px)] rounded-2xl border border-[hsl(var(--border))] bg-white flex flex-col min-w-0">
+          <div className="p-4 border-b border-[hsl(var(--border))] flex items-center justify-between shrink-0">
+            <div className="min-w-0">
+              <div className="text-[11px] uppercase tracking-[0.16em] text-[hsl(var(--muted-foreground))] font-semibold">
                 Current Bill
               </div>
-              <div className="font-display text-lg font-semibold mt-0.5">
+              <div className="font-display text-base font-semibold mt-0.5 truncate">
                 {invoiceNo}
               </div>
             </div>
-            <button
-              onClick={clearCart}
-              disabled={!cart.length}
-              className="text-xs inline-flex items-center gap-1 text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--destructive))] disabled:opacity-50"
-            >
-              <Trash2 className="h-3.5 w-3.5" /> Clear
-            </button>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[11px] uppercase tracking-[0.14em] text-[hsl(var(--muted-foreground))] font-semibold">
+                {itemCount} item{itemCount !== 1 ? "s" : ""}
+              </span>
+              <button
+                onClick={clearCart}
+                disabled={!cart.length}
+                className="text-xs inline-flex items-center gap-1 text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--destructive))] disabled:opacity-50"
+              >
+                <Trash2 className="h-3.5 w-3.5" /> Clear
+              </button>
+            </div>
           </div>
 
-          <div className="px-5 py-4 grid grid-cols-2 gap-3 border-b border-[hsl(var(--border))]">
+          <div className="px-4 py-3 grid grid-cols-2 gap-3 border-b border-[hsl(var(--border))] shrink-0">
             <div>
-              <label className="text-[11px] uppercase tracking-[0.16em] text-[hsl(var(--muted-foreground))] font-semibold">
+              <label className="text-[10px] uppercase tracking-[0.16em] text-[hsl(var(--muted-foreground))] font-semibold">
                 Customer
               </label>
               <input
@@ -240,7 +247,7 @@ export default function Billing() {
               />
             </div>
             <div>
-              <label className="text-[11px] uppercase tracking-[0.16em] text-[hsl(var(--muted-foreground))] font-semibold">
+              <label className="text-[10px] uppercase tracking-[0.16em] text-[hsl(var(--muted-foreground))] font-semibold">
                 Phone
               </label>
               <input
@@ -254,7 +261,7 @@ export default function Billing() {
             </div>
           </div>
 
-          <div className="px-5 py-3 max-h-[34vh] lg:max-h-[42vh] overflow-y-auto scrollbar-thin">
+          <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin px-4">
             {cart.length === 0 ? (
               <div className="text-center py-10">
                 <div className="h-12 w-12 rounded-full bg-[hsl(var(--secondary))] grid place-items-center mx-auto mb-3">
@@ -274,13 +281,13 @@ export default function Billing() {
                         <div className="text-sm font-semibold truncate">
                           {c.name}
                         </div>
-                        <div className="text-xs text-[hsl(var(--muted-foreground))]">
-                          {c.sku} · GST {c.gst}%
+                        <div className="text-[11px] text-[hsl(var(--muted-foreground))]">
+                          {c.sku} · GST {c.gst}% · {inr(c.price)}
                         </div>
                       </div>
                       <button
                         onClick={() => removeLine(c.productId)}
-                        className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--destructive))]"
+                        className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--destructive))] shrink-0"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -313,7 +320,7 @@ export default function Billing() {
             )}
           </div>
 
-          <div className="px-5 py-4 border-t border-[hsl(var(--border))] space-y-2 text-sm">
+          <div className="px-4 py-3 border-t border-[hsl(var(--border))] space-y-1.5 text-sm shrink-0 bg-[hsl(var(--secondary))]/20">
             <div className="flex justify-between">
               <span className="text-[hsl(var(--muted-foreground))]">
                 Subtotal
@@ -334,7 +341,7 @@ export default function Billing() {
               <span className="text-[hsl(var(--muted-foreground))] inline-flex items-center gap-1">
                 <Tag className="h-3.5 w-3.5" /> Discount
               </span>
-              <div className="flex items-center gap-1 rounded-lg border border-[hsl(var(--border))] px-2 h-8">
+              <div className="flex items-center gap-1 rounded-lg border border-[hsl(var(--border))] bg-white px-2 h-8">
                 <IndianRupee className="h-3.5 w-3.5 text-[hsl(var(--muted-foreground))]" />
                 <input
                   type="number"
@@ -348,7 +355,7 @@ export default function Billing() {
                 />
               </div>
             </div>
-            <div className="flex items-center justify-between pt-3 border-t border-dashed border-[hsl(var(--border))]">
+            <div className="flex items-center justify-between pt-2.5 border-t border-dashed border-[hsl(var(--border))]">
               <span className="font-display text-base font-semibold">
                 Grand Total
               </span>
@@ -374,18 +381,18 @@ export default function Billing() {
             </div>
           </div>
 
-          <div className="p-5 border-t border-[hsl(var(--border))] grid grid-cols-2 gap-2">
+          <div className="p-3.5 border-t border-[hsl(var(--border))] grid grid-cols-2 gap-2 shrink-0">
             <button
               onClick={handleDownloadPdf}
               disabled={!cart.length}
-              className="h-12 rounded-xl bg-white border border-[hsl(var(--border))] inline-flex items-center justify-center gap-2 text-sm font-semibold hover:border-[hsl(var(--primary))]/40 disabled:opacity-50"
+              className="h-12 rounded-xl bg-white border border-[hsl(var(--border))] inline-flex items-center justify-center gap-2 text-sm font-semibold hover:border-[hsl(var(--primary))]/40 disabled:opacity-50 transition"
             >
               <Download className="h-4 w-4" /> PDF
             </button>
             <button
               onClick={handlePrint}
               disabled={!cart.length}
-              className="h-12 rounded-xl bg-[hsl(var(--primary))] text-white inline-flex items-center justify-center gap-2 text-sm font-semibold hover:opacity-95 disabled:opacity-50"
+              className="h-12 rounded-xl bg-[hsl(var(--primary))] text-white inline-flex items-center justify-center gap-2 text-sm font-semibold hover:opacity-95 disabled:opacity-50 transition"
             >
               <Printer className="h-4 w-4" /> Print Bill
             </button>
@@ -451,8 +458,6 @@ export default function Billing() {
   );
 }
 
-import { forwardRef } from "react";
-
 interface InvoicePreviewProps {
   invoiceNo: string;
   customer: { name: string; phone: string };
@@ -485,7 +490,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
         <div className="flex items-start justify-between border-b pb-4 border-[hsl(var(--border))]">
           <div>
             <div className="font-display text-2xl font-semibold">
-              Akka Boutique
+              BoutiqueOS
             </div>
             <div className="text-xs text-[hsl(var(--muted-foreground))] mt-1">
               45, Pondy Bazaar, T. Nagar, Chennai 600017
@@ -603,7 +608,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
         </div>
 
         <div className="border-t border-[hsl(var(--border))] mt-6 pt-4 text-[11px] text-[hsl(var(--muted-foreground))] flex justify-between">
-          <span>Thank you for shopping at Akka Boutique.</span>
+          <span>Thank you for shopping with BoutiqueOS.</span>
           <span>This is a computer-generated invoice.</span>
         </div>
       </div>

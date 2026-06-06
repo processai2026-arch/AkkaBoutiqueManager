@@ -19,21 +19,21 @@ export default function StatCard({
   hint,
 }: StatCardProps) {
   return (
-    <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-[0_1px_0_rgba(15,14,12,0.04)] hover:shadow-md hover:-translate-y-0.5 transition-all">
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="text-xs uppercase tracking-[0.16em] text-[hsl(var(--muted-foreground))] font-medium">
+    <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-4 shadow-[0_1px_0_rgba(15,14,12,0.04)] hover:shadow-md hover:-translate-y-0.5 transition-all">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-[11px] uppercase tracking-[0.16em] text-[hsl(var(--muted-foreground))] font-medium truncate">
             {label}
           </div>
-          <div className="mt-2 font-display text-3xl font-semibold tracking-tight">
+          <div className="mt-1.5 font-display text-[26px] leading-tight font-semibold tracking-tight tabular-nums">
             {value}
           </div>
         </div>
-        <div className="h-10 w-10 rounded-xl bg-[hsl(var(--secondary))] grid place-items-center text-[hsl(var(--foreground))]">
+        <div className="h-9 w-9 shrink-0 rounded-xl bg-[hsl(var(--secondary))] grid place-items-center text-[hsl(var(--foreground))]">
           {icon}
         </div>
       </div>
-      <div className="mt-4 flex items-center gap-2 text-xs">
+      <div className="mt-3 flex items-center gap-2 text-[11px]">
         {delta ? (
           <span
             className={cn(
@@ -55,7 +55,9 @@ export default function StatCard({
           </span>
         ) : null}
         {hint ? (
-          <span className="text-[hsl(var(--muted-foreground))]">{hint}</span>
+          <span className="text-[hsl(var(--muted-foreground))] truncate">
+            {hint}
+          </span>
         ) : null}
       </div>
     </div>
